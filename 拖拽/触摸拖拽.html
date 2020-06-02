@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>触摸拖拽</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        ul {
+            width: 200px;
+            height: 361px;
+            cursor: pointer;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            background: #787878;
+        }
+    </style>
+</head>
+
+<body>
+    <ul id="ul1">
+        拖拽
+    </ul>
+    <script>
+        var ul1 = document.getElementById('ul1')
+        var startPoint = 0  // 按下时的手指坐标
+        var startEl = 0   // 按下时的元素坐标
+        ul1.addEventListener('touchstart', function (e) {
+            startPoint = e.changedTouches[0].pageX
+            startEl = parseFloat(getComputedStyle(ul1, null).left)
+        })
+        ul1.addEventListener('touchmove', function (e) {
+            var nowPoint = e.changedTouches[0].pageX
+            var pointDis = nowPoint - startPoint
+            ul1.style.left = pointDis + startEl + 'px'
+        })
+    </script>
+</body>
+
+</html>

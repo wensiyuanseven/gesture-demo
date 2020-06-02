@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>pinch</title>
+</head>
+<style>
+    div {
+        width: 200px;
+        height: 200px;
+        border: 1px solid sienna;
+    }
+</style>
+
+<body>
+    <div id="box">双指缩放</div>
+    <script>
+        // 计算手指距离
+        function getLen(v) {
+            return Math.sqrt(v.x * v.x + v.y * v.y)
+        }
+        function pinch(el, fn) {
+
+            let preV = { x: null, y: null }
+            el.addEventListener('touchstart', function (e) {
+                if (e.touches.length > 1) {
+                    preV = { x: e.touches[1].pageX - e.touches[0].pageX, y: e.touches[1].pageY - e.touches[0].pageY }
+                }
+            })
+            el.addEventListener('touchmove', function (e) {
+                e.preventDefault()
+                if (e.touches.length > 1) {
+                    v = { x: e.touches[1].pageX - e.touches[0].pageX, y: e.touches[1].pageY - e.touches[0].pageY }
+                    if (preV.x !== null) {
+                        // 距离比值
+                        e.scale = getLen(v) / getLen(preV)
+                        fn && fn.call(el, e)
+                    }
+                }
+            })
+        }
+        let box = document.getElementById('box')
+        pinch(box, e => {
+            box.innerHTML = e.scale
+        })
+    </script>
+</body>
+
+</html>

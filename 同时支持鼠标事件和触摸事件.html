@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>同时支持鼠标事件和触摸事件</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        ul {
+            width: 200px;
+            height: 361px;
+            cursor: pointer;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            background: #787878;
+        }
+    </style>
+</head>
+
+<body>
+
+    <ul id="ul1">
+        拖拽
+    </ul>
+    <script>
+        let oUl = document.getElementById('ul1')
+        let disX = 0;
+        let offsetLeft = 0
+        oUl.onmousedown = function (ev) {
+            mouseDownOrTouchStart(ev.pageX)
+            oUl.onmousemove = function (ev) {
+                mouseMoveOrTouchMove(ev.pageX)
+            }
+
+            oUl.onmouseup = function (ev) {
+                oUl.onmousemove = null
+                oUl.onmouseup = null
+            }
+
+        }
+        oUl.ontouchstart = function (ev) {
+            mouseDownOrTouchStart(ev.touches[0].pageX)
+        }
+        oUl.ontouchmove = function (ev) {
+            mouseMoveOrTouchMove(ev.touches[0].pageX)
+        }
+
+        // 代理
+        function mouseDownOrTouchStart(pageX) {
+            disX = pageX
+            offsetLeft = oUl.offsetLeft
+        }
+
+        function mouseMoveOrTouchMove(pageX) {
+            oUl.style.left = pageX - disX + offsetLeft + 'px'
+        }
+
+    </script>
+</body>
+
+</html>

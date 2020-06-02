@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>langTap</title>
+</head>
+<style>
+    div {
+        width: 200px;
+        height: 200px;
+        border: 1px solid sienna;
+        background: saddlebrown;
+    }
+</style>
+<script src="./transform.js"></script>
+
+<body>
+    <div id="box">拖拽此物体</div>
+
+    <script>
+
+        function drag(el, fn) {
+            let x2 = null, y2 = null
+            el.addEventListener('touchmove', function (e) {
+                e.preventDefault()
+                let currentX = e.touches[0].pageX, currentY = e.touches[0].pageY
+                if (x2 !== null || y2 !== null) {
+                    e.deltaX = currentX - x2
+                    e.deltaY = currentY - y2
+                    fn && fn.call(el, e)
+                }
+                x2 = currentX
+                y2 = currentY
+            })
+            el.addEventListener('touchend', function (e) {
+                x2 = null
+                y2 = null
+            })
+        }
+        let box = document.getElementById('box')
+        Transform(box);
+        drag(box, e => {
+            box.translateX += e.deltaX;
+            box.translateY += e.deltaY;
+        })
+    </script>
+</body>
+
+</html>

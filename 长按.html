@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>langTap</title>
+</head>
+
+<body>
+    <button id='box'>长按</button>
+    <script>
+        /*
+           touchstart时开启一个`750毫秒`的定时器，如果750ms内有touchmove或者touchend都会清除掉该定时器。超过750ms没有touchmove或者touchend就会触发longTap
+        */
+        function langTap(el, fn) {
+            let longTapTimeout = null
+            el.addEventListener('touchstart', function (e) {
+                e.preventDefault()
+                if (e.touches.length == 1) {
+                    longTapTimeout = setTimeout(() => {
+                        fn && fn.call(el, e)
+                    }, 750)
+                }
+            })
+            el.addEventListener('touchmove', function (e) {
+                clearInterval(longTapTimeout)
+            })
+            el.addEventListener('touchend', function (e) {
+                clearInterval(longTapTimeout)
+            })
+        }
+        langTap(document.getElementById('box'), () => {
+            alert('长按')
+        })
+    </script>
+</body>
+
+</html>

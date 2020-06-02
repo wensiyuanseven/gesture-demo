@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拖拽</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<style>
+    #box {
+        width: 200px;
+        height: 200px;
+        border: 1px solid sienna;
+        background: saddlebrown;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <div id="box" :style="{transform:`translate3d(${offsetX}px,${offsetY}px,0)`}">拖拽此物体</div>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                offsetX: 0,
+                offsetY: 0
+            },
+            mounted() {
+
+                let box = document.getElementById('box')
+                this.drag(box, e => {
+                    this.offsetX += e.deltaX
+                    this.offsetY += e.deltaY
+                })
+            },
+            methods: {
+                drag(el, fn) {
+                    let x2 = null, y2 = null
+                    el.addEventListener('touchmove', function (e) {
+                        e.preventDefault()
+                        let currentX = e.touches[0].pageX, currentY = e.touches[0].pageY
+                        if (x2 !== null || y2 !== null) {
+                            e.deltaX = currentX - x2
+                            e.deltaY = currentY - y2
+                            fn && fn.call(el, e)
+                        }
+                        x2 = currentX
+                        y2 = currentY
+                    })
+                    el.addEventListener('touchend', function (e) {
+                        x2 = null
+                        y2 = null
+                    })
+                }
+            }
+        })
+
+    </script>
+</body>
+
+</html>

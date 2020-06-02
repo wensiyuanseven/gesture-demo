@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>doubleTap</title>
+</head>
+
+<body>
+    <button id='box'>双击</button>
+    <script>
+        /*
+        在`touchstart`中判断两次点击的时间间隔`0<time<250ms` 并且判断两次按下的手指坐标的差值是否小于某个定值（此逻辑和tap事件一样）。
+        如果都满足，那么就在`touchend`事件中触发双击
+        */
+        function doubleTap(el, fn) {
+            let last, prePoint = { X: 0, Y: 0 }, isDoubleTap = false
+            el.addEventListener('touchstart', function (e) {
+                e.preventDefault()
+                let now = Date.now()
+                let time = now - (last || now)
+                let currentPoint = {
+                    X: e.touches[0].pageX,
+                    Y: e.touches[0].pageY
+                }
+                // 判断时间差和坐标位置
+                isDoubleTap = time > 0 && time < 250 && Math.abs(currentPoint.X - prePoint.X) < 30 && Math.abs(currentPoint.X - prePoint.Y < 30)
+                last = Date.now()
+                prePoint.X = currentPoint.X
+                prePoint.Y = currentPoint.Y
+            });
+            el.addEventListener('touchend', function (e) {
+                if (isDoubleTap) {
+                    // 重置状态
+                    prePoint = { X: 0, Y: 0 }
+                    isDoubleTap = false
+                    fn && fn.call(el, e)
+                }
+            });
+        }
+        doubleTap(document.getElementById('box'), () => {
+            alert('双击')
+        })
+    </script>
+</body>
+
+</html>

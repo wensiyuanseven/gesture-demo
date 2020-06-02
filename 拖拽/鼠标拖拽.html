@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>鼠标拖拽</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        ul {
+            width: 200px;
+            height: 361px;
+            cursor: pointer;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            background: #787878;
+        }
+    </style>
+    <script>
+        /*
+            1. 按下时 获取 元素坐标 和 手指坐标
+            2. move时 获取手指坐标
+            3. 用 move的手指 - start时的手指坐标 = 手指移动距离
+            4. start时元素坐标 +  手指移动距离 = 元素的当前距离
+        */
+        window.onload = function () {
+            var oUl = document.getElementById('ul1');
+            var disX = 0;
+            var offsetLeft = 0 //元素坐标
+            oUl.onmousedown = function (ev) {
+                disX = ev.pageX
+                offsetLeft = oUl.offsetLeft // parseFloat(getComputedStyle(oUl,null).left)
+                oUl.onmousemove = function (ev) {
+                    oUl.style.left = ev.pageX - disX + offsetLeft + 'px'
+                };
+                // 鼠标抬起
+                oUl.onmouseup = function (ev) {
+                    // 取消事件监听
+                    oUl.onmousemove = null;
+                    oUl.onmouseup = null;
+                };
+                //防止文字选中
+                return false;
+            };
+        };
+    </script>
+</head>
+
+<body>
+
+    <ul id="ul1">
+        拖拽
+    </ul>
+
+</body>
+
+</html>

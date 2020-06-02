@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>langTap</title>
+</head>
+<style>
+    div {
+        width: 200px;
+        height: 200px;
+        border: 1px solid sienna;
+        background: saddlebrown;
+    }
+</style>
+
+<body>
+    <div id="box">拖拽此物体</div>
+
+    <script>
+
+        function drag(el, fn) {
+            let x2 = null, y2 = null
+            el.addEventListener('touchmove', function (e) {
+                e.preventDefault()
+                let currentX = e.touches[0].pageX, currentY = e.touches[0].pageY
+                if (x2 !== null || y2 !== null) {
+                    e.deltaX = currentX - x2
+                    e.deltaY = currentY - y2
+                    fn && fn.call(el, e)
+                }
+                x2 = currentX
+                y2 = currentY
+            })
+            el.addEventListener('touchend', function (e) {
+                x2 = null
+                y2 = null
+            })
+        }
+        let box = document.getElementById('box')
+        box.style.transform = `translate3d(0,0,0)`
+        drag(box, e => {
+            let translates = getComputedStyle(box, null).transform  //得到的为矩阵
+            let x = parseFloat(translates.substring(6).split(',')[4]) //解析x轴数值
+            let y = parseFloat(translates.substring(6).split(',')[5]); //解析y轴数值
+            box.style.transform = `translate3d(${x += e.deltaX}px,${y += e.deltaY}px,0)`
+        })
+    </script>
+</body>
+
+</html>

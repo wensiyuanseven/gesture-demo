@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>双指旋转</title>
+</head>
+<style>
+    div {
+        width: 200px;
+        height: 200px;
+        border: 1px solid sienna;
+    }
+</style>
+
+<body>
+    <div id="box">双指旋转</div>
+    <script>
+
+        //根据共线定理判断方向
+        function cross(v1, v2) {
+            return v1.x * v2.y - v2.x * v1.y
+        }
+        // 勾股定理计算长度
+        function getLen(v) {
+            return Math.sqrt(v.x * v.x + v.y * v.y)
+        }
+        // 计算向量积
+        function dot(v1, v2) {
+            return v1.x * v2.x + v1.y * v2.y;
+        }
+        // 计算弧度
+        function getAngle(v1, v2) {
+            let mr = getLen(v1) * getLen(v2)
+            if (mr === 0) return 0
+            let r = dot(v1, v2) / mr  //得到弧度
+            if (r > 1) r = 1   // Math.acos(1)=0
+            return Math.acos(r)
+        }
+        // 传入两个向量
+        function getRotateAngle(v1, v2) {
+            let angle = getAngle(v1, v2)
+            if (cross(v1, v2) > 0) {
+                angle *= -1
+            }
+            return angle * 180 / Math.PI //弧度转角度
+        }
+
+        function rotate(el, fn) {
+            let preV = { x: null, y: null }
+            el.addEventListener('touchmove', function (e) {
+                if (e.touches.length > 1) {
+                    let currentX = e.touches[0].pageX,
+                        currentY = e.touches[0].pageY,
+                        // 计算向量
+                        v = { x: e.touches[1].pageX - currentX, y: e.touches[1].pageY - currentY }
+                    // 拿到旋转角度 因为每次计算的旋转角度是上一次和当前旋转的差值，所以的到的旋转角度会比较小，注意与Math.atan2()区分
+                    e.angle = getRotateAngle(v, preV)
+                    if (preV.x !== null) {
+                        fn && fn.call(el, e)
+                    }
+                    preV.x = v.x
+                    preV.y = v.y
+                }
+
+            })
+        }
+        let box = document.getElementById('box')
+        rotate(box, e => {
+            box.innerHTML = e.angle
+        })
+    </script>
+</body>
+
+</html>

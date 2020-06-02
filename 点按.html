@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>tap</title>
+</head>
+
+<body>
+    <button id='box'>点按 </button>
+    <script>
+        /*
+                在点击的时候，记录手指坐标
+                抬起的时候，判断 手指坐标 和 摁下的手指坐标的差值，小于一定值时我们就认定它是点击
+        */
+        function tap(el, fn) {
+            let startPoint = {};
+            el.addEventListener('touchstart', function (e) {
+                startPoint = {
+                    x: e.changedTouches[0].pageX,
+                    y: e.changedTouches[0].pageY
+                }
+            });
+            el.addEventListener('touchend', function (e) {
+                let nowPoint = {
+                    x: e.changedTouches[0].pageX,
+                    y: e.changedTouches[0].pageY
+                }
+                if (Math.abs(nowPoint.x - startPoint.x) < 30 && Math.abs(nowPoint.y - startPoint.y) < 30) {
+                    fn && fn.call(el, e);
+                }
+            });
+        }
+        tap(document.getElementById('box'), () => {
+            alert('点按')
+        })
+    </script>
+</body>
+
+</html>

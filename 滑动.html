@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>滑动</title>
+
+</head>
+
+<style>
+    div {
+        width: 200px;
+        height: 200px;
+        border: 1px solid sienna;
+    }
+</style>
+
+<body>
+    <div id="box"></div>
+    <script>
+        function swipeDirection(x1, x2, y1, y2) {
+            return Math.abs(x1 - x2) >= Math.abs(y1 - y2) ? (x1 - x2 > 0 ? 'Left' : 'Right') : (y1 - y2 > 0 ? 'Up' : 'Down')
+        }
+        function swipe(el, fn) {
+            let startPoint = {};
+            el.addEventListener('touchstart', function (e) {
+                e.preventDefault();
+                startPoint = {
+                    x: e.changedTouches[0].pageX,
+                    y: e.changedTouches[0].pageY
+                }
+            });
+            el.addEventListener('touchend', function (e) {
+                let nowPoint = {
+                    x: e.changedTouches[0].pageX,
+                    y: e.changedTouches[0].pageY
+                }
+                if (Math.abs(nowPoint.x - startPoint.x) > 10 && Math.abs(nowPoint.y - startPoint.y) > 10) {
+                    e.direction = swipeDirection(startPoint.x, nowPoint.x, startPoint.y, nowPoint.y);
+                    fn && fn.call(el, e);
+                }
+            });
+        }
+        let box = document.getElementById('box')
+        swipe(box, e => {
+            box.innerHTML = e.direction
+        })
+    </script>
+</body>
+
+</html>
