@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>touchMove求位移冲量和速度冲量</title>
+    <style>
+        div {
+            width: 200px;
+            height: 200px;
+            background: sandybrown;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="abc"></div>
+    <script>
+        let x = null, y = null, lastTime = null
+        let destance = 0
+        abc.addEventListener('touchmove', function (event) {
+            let currentY = event.touches[0].pageY
+            let currentX = event.touches[0].pageX
+            if (x !== null) {
+                // 位移冲量
+                event.detalX = currentX - x
+                event.detalY = currentY - y
+
+                console.log('x轴:', event.detalX)
+                console.log('y轴:', event.detalY)
+
+            }
+            if (lastTime !== null) {
+                // 时间冲量
+                event.moveTime = Date.now() - lastTime
+                console.log('时间冲量:', event.moveTime)
+            }
+            x = currentX
+            y = currentY
+            lastTime = Date.now()
+        })
+        abc.addEventListener('touchend', function (event) {
+            x = y = lastTime = null
+        } )
+
+    </script>
+</body>
+
+</html>
